@@ -6,6 +6,7 @@ const api_key = import.meta.env.VITE_GOOGLE_API_KEY
 
 // import gemini
 import { GoogleGenAI } from "@google/genai";
+import Showmessage from "./components/Showmessage";
 const ai = new GoogleGenAI({ apiKey: api_key});
 
 function reducer(state, action) {
@@ -18,6 +19,8 @@ function reducer(state, action) {
       return {...state, chatEntry: [...state.chatEntry, action.payload]}
     case 'toggle_user_turn':
       return {...state, isUserTurn: action.payload}
+    case 'toggle_dispaly_msg':
+      return {...state, isDisplayMessage: action.payload}
     default:
       return state
   }
@@ -27,7 +30,7 @@ function reducer(state, action) {
 const StateContext = createContext(null);
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, {isExtend: false, chatEntry: [], isUserTurn: true})
+  const [state, dispatch] = useReducer(reducer, {isExtend: false, chatEntry: [], isUserTurn: true, isDisplayMessage: false})
   
 
   // useEffect to fetch gemeni api
@@ -75,10 +78,15 @@ function App() {
     dispatch({type: 'toggle_user_turn', payload: value})
   }
 
+  const handleToggleDisplayMessage = (value) => {
+    dispatch({type: 'toggle_dispaly_msg', payload: value})
+  }
+
   return (
     <div className="flex items-start">
-      <Sidebar isExtend={state.isExtend} handleToggleIsExtend={handleToggleIsExtend}/>
-      <StateContext.Provider value={{state, handleToggleIsExtend, handleAppendChat, handleToggleIsUserTurn}}>
+      {state.isDisplayMessage && <Showmessage handleToggleDisplayMessage={handleToggleDisplayMessage}/>}
+      <Sidebar isExtend={state.isExtend} handleToggleIsExtend={handleToggleIsExtend} handleToggleDisplayMessage={handleToggleDisplayMessage}/>
+      <StateContext.Provider value={{state, handleToggleIsExtend, handleAppendChat, handleToggleIsUserTurn, handleToggleDisplayMessage}}>
         <Mainchatarea/>
       </StateContext.Provider>
 

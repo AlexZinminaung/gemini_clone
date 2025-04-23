@@ -6,7 +6,7 @@ import { StateContext } from "../App";
 
 function Navbar()
 {
-    const {state, handleToggleIsExtend} = useContext(StateContext)
+    const {state, handleToggleIsExtend, handleToggleDisplayMessage} = useContext(StateContext)
     
     return (
         <nav className="w-full flex p-2 items-center text-white">
@@ -15,7 +15,9 @@ function Navbar()
             className="md:hidden hover:bg-gray-500 rounded-full p-2 "><IoIosMenu size={25}/>
             </button>
             <span className=" font-semibold text-lg">Gemini Clone</span>
-            <button className=" ml-auto">
+            <button 
+            onClick={ () => {handleToggleDisplayMessage(true)}}
+            className=" ml-auto hover:bg-gray-500 rounded-full p-2 ">
                 <MdOutlineAccountCircle size={35}/>
             </button>
         </nav>
